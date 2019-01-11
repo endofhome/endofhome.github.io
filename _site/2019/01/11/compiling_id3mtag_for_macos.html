@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Compiling id3mtag for macOS | Tom Barnsbury</title>
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="Compiling id3mtag for macOS" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="I’m working on a project which involves tagging some mp3 files using the id3v2 spec. Rather than write one myself, I thought (errantly) that it would be easy to find a command line tool for macOS that I could use in a shell script. It’s true that there are several out there, but they all had limitations. These range from randomly limiting text fields to 254 characters (a limitation not found in the id3v2 spec), not being able to write comment tags (which is necessary for my project) and not being able to write id3v2 at all. I also came across a promising looking open source tool, written primarily in c++: id3mtag." />
+<meta property="og:description" content="I’m working on a project which involves tagging some mp3 files using the id3v2 spec. Rather than write one myself, I thought (errantly) that it would be easy to find a command line tool for macOS that I could use in a shell script. It’s true that there are several out there, but they all had limitations. These range from randomly limiting text fields to 254 characters (a limitation not found in the id3v2 spec), not being able to write comment tags (which is necessary for my project) and not being able to write id3v2 at all. I also came across a promising looking open source tool, written primarily in c++: id3mtag." />
+<link rel="canonical" href="http://localhost:4000/2019/01/11/compiling_id3mtag_for_macos.html" />
+<meta property="og:url" content="http://localhost:4000/2019/01/11/compiling_id3mtag_for_macos.html" />
+<meta property="og:site_name" content="Tom Barnsbury" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-01-11T11:22:01+00:00" />
+<script type="application/ld+json">
+{"description":"I’m working on a project which involves tagging some mp3 files using the id3v2 spec. Rather than write one myself, I thought (errantly) that it would be easy to find a command line tool for macOS that I could use in a shell script. It’s true that there are several out there, but they all had limitations. These range from randomly limiting text fields to 254 characters (a limitation not found in the id3v2 spec), not being able to write comment tags (which is necessary for my project) and not being able to write id3v2 at all. I also came across a promising looking open source tool, written primarily in c++: id3mtag.","@type":"BlogPosting","url":"http://localhost:4000/2019/01/11/compiling_id3mtag_for_macos.html","headline":"Compiling id3mtag for macOS","dateModified":"2019-01-11T11:22:01+00:00","datePublished":"2019-01-11T11:22:01+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2019/01/11/compiling_id3mtag_for_macos.html"},"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Tom Barnsbury" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Tom Barnsbury</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Compiling id3mtag for macOS</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2019-01-11T11:22:01+00:00" itemprop="datePublished">Jan 11, 2019
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>I’m working on a project which involves tagging some mp3 files using the id3v2 spec. Rather than write one myself, I thought (errantly) that it would be easy to find a command line tool for macOS that I could use in a shell script. It’s true that there are several out there, but they all had limitations. These range from randomly limiting text fields to 254 characters (a limitation not found in the id3v2 spec), not being able to write comment tags (which is necessary for my project) and not being able to write id3v2 at all. I also came across a promising looking open source tool, written primarily in c++: <a href="https://squell.github.io/id3/"><code class="highlighter-rouge">id3mtag</code></a>.</p>
+
+<p>The tool isn’t available in Homebrew and the author does not make a pre-built binary for macOS available. So I thought I’d try to compile it myself. Should be no big deal, I thought. I’m a <code class="highlighter-rouge">make</code> noob, and I’ve never written a line of c++ in life. My confidence was not well founded. Here’s what happened.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make -f makefile
+c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c main.cpp
+c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c sedit.cpp
+c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c varexp.cpp
+c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c fileexp.cpp
+c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c charconv.cpp
+c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c mass_tag.cpp
+c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c pattern.cpp
+c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c setid3.cpp
+c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c getid3.cpp
+cc -g -Os -pedantic -Wformat -Wno-parentheses -c id3v1.c
+c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c setid3v2.cpp
+c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c getid3v2.cpp
+cc -g -Os -pedantic -Wformat -Wno-parentheses -c id3v2.c
+cc -g -Os -pedantic -Wformat -Wno-parentheses -c fileops.c
+c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c char_ucs.cpp
+c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c char_utf8.cpp
+c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c setlyr3.cpp
+c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c getlyr3.cpp
+c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c lyrics3.cpp
+c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c setfname.cpp
+c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c setquery.cpp
+c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c dumptag.cpp
+c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses main.o sedit.o varexp.o fileexp.o charconv.o mass_tag.o pattern.o setid3.o getid3.o id3v1.o setid3v2.o getid3v2.o id3v2.o fileops.o char_ucs.o char_utf8.o setlyr3.o getlyr3.o lyrics3.o setfname.o setquery.o dumptag.o  -o id3
+Undefined symbols for architecture x86_64:
+  "_iconv", referenced from:
+      charset::recode(char*, unsigned long, void const*, unsigned long, char const*, char const*, bool, unsigned long) in charconv.o
+  "_iconv_close", referenced from:
+      charset::recode(char*, unsigned long, void const*, unsigned long, char const*, char const*, bool, unsigned long) in charconv.o
+  "_iconv_open", referenced from:
+      charset::recode(char*, unsigned long, void const*, unsigned long, char const*, char const*, bool, unsigned long) in charconv.o
+ld: symbol(s) not found for architecture x86_64
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+make: *** [id3] Error 1
+</code></pre></div></div>
+
+<p>Argh!</p>
+
+<p>Knowing that macOS is based on FreeBSD I attempted to use the <a href="https://github.com/squell/id3/blob/master/FreeBSD/Makefile">FreeBSD Makefile</a> included with the source code. It failed in a completely different way. However, studying the file I noticed these lines:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USES=   iconv
+
+CFLAGS+=  -I${ICONV_INCLUDE_PATH}
+LDFLAGS+= -L${ICONV_PREFIX}/lib ${ICONV_LIB}
+</code></pre></div></div>
+
+<p>I’m not going to lie and pretend I understand the problem. It seems to be based around Apple providing their own <code class="highlighter-rouge">iconv</code> in <code class="highlighter-rouge">/usr/lib</code> (there are three possible culprits on my system, <code class="highlighter-rouge">libiconv.2.4.0.dylib</code>, <code class="highlighter-rouge">libiconv.2.dylib</code> and <code class="highlighter-rouge">libiconv.dylib</code>).</p>
+
+<p>This document was also useful in helping me figure out what the values for the <code class="highlighter-rouge">ICONV_*</code> variables should be: <a href="https://www.freebsd.org/doc/en/books/porters-handbook/using-iconv.html">https://www.freebsd.org/doc/en/books/porters-handbook/using-iconv.html</a></p>
+
+<h2 id="the-solution">The solution:</h2>
+
+<p>Install iconv (I used brew):</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew install iconv
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>iconv --version
+iconv (GNU libiconv 1.11)
+Copyright (C) 2000-2006 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+Written by Bruno Haible.
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>which iconv
+/usr/bin/iconv
+</code></pre></div></div>
+
+<p>Modify the generic <a href="https://github.com/squell/id3/blob/master/makefile"><code class="highlighter-rouge">makefile</code></a> provided by the author. (I added a single line below each <code class="highlighter-rouge"># added</code> comment)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># added
+USES= iconv
+
+CFLAGS   ?= -g -Os -pedantic
+CFLAGS   += $(WARNINGS:%=-W%)
+
+# added
+CFLAGS+=        -I/usr/bin
+
+CXXFLAGS ?= $(DEFFLAGS)
+CXXFLAGS += -fno-rtti $(WARNINGS:%=-W%)
+LDFLAGS  ?=
+
+# added
+LDFLAGS  += -L/usr/bin -liconv
+</code></pre></div></div>
+
+<p>Now try to compile:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make -f makefile
+c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c main.cpp
+c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c sedit.cpp
+c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c varexp.cpp
+c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c fileexp.cpp
+c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c charconv.cpp
+c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c mass_tag.cpp
+c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c pattern.cpp
+c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c setid3.cpp
+c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c getid3.cpp
+cc -g -Os -pedantic -Wformat -Wno-parentheses -I/usr/bin -c id3v1.c
+c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c setid3v2.cpp
+c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c getid3v2.cpp
+cc -g -Os -pedantic -Wformat -Wno-parentheses -I/usr/bin -c id3v2.c
+cc -g -Os -pedantic -Wformat -Wno-parentheses -I/usr/bin -c fileops.c
+c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c char_ucs.cpp
+c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c char_utf8.cpp
+c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c setlyr3.cpp
+c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c getlyr3.cpp
+c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c lyrics3.cpp
+c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c setfname.cpp
+c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c setquery.cpp
+c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c dumptag.cpp
+c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses main.o sedit.o varexp.o fileexp.o charconv.o mass_tag.o pattern.o setid3.o getid3.o id3v1.o setid3v2.o getid3v2.o id3v2.o fileops.o char_ucs.o char_utf8.o setlyr3.o getlyr3.o lyrics3.o setfname.o setquery.o dumptag.o  -L/usr/bin -liconv  -o id3
+</code></pre></div></div>
+
+<p>Looks good! Now to install:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo make install
+install -d /usr/local/bin /usr/local/man/man1
+install -m 644 id3.man /usr/local/man/man1/id3.1
+install id3 /usr/local/bin/id3
+</code></pre></div></div>
+
+<p>Success!</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>id3 --version
+id3 0.80 (2016005), Copyright (C) 2003, 04, 05, 06, 15 Marc R. Schoolderman
+This program comes with ABSOLUTELY NO WARRANTY.
+
+This is free software, and you are welcome to redistribute it
+under certain conditions; see the file named COPYING in the
+source distribution for details.
+</code></pre></div></div>
+
+<p>After trying multiple different tagging tools (I’m particularly looking at you, <code class="highlighter-rouge">ffmpeg</code>), <code class="highlighter-rouge">id3mtag</code> works wonderfully. I suspect there’s a better solution to this problem, and perhaps one day I will find out what it is - but for now, I’m satisfied.</p>
+
+<h2 id="links">Links:</h2>
+<p>id3mtag: <a href="https://squell.github.io/id3/">https://squell.github.io/id3/</a></p>
+
+  </div><a class="u-url" href="/2019/01/11/compiling_id3mtag_for_macos.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Tom Barnsbury</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Tom Barnsbury</li><li><a class="u-email" href="mailto:blog@endofhome.co.uk">blog@endofhome.co.uk</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/endofhome"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">endofhome</span></a></li><li><a href="https://www.twitter.com/tom_puter"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">tom_puter</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Tech tips, musings, learnings from a perpetual noob.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2019-01-11T14:37:02+00:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Tom Barnsbury</title><subtitle>Tech tips, musings, learnings from a perpetual noob.</subtitle><entry><title type="html">Compiling id3mtag for macOS</title><link href="http://localhost:4000/2019/01/11/compiling_id3mtag_for_macos.html" rel="alternate" type="text/html" title="Compiling id3mtag for macOS" /><published>2019-01-11T11:22:01+00:00</published><updated>2019-01-11T11:22:01+00:00</updated><id>http://localhost:4000/2019/01/11/compiling_id3mtag_for_macos</id><content type="html" xml:base="http://localhost:4000/2019/01/11/compiling_id3mtag_for_macos.html">&lt;p&gt;I’m working on a project which involves tagging some mp3 files using the id3v2 spec. Rather than write one myself, I thought (errantly) that it would be easy to find a command line tool for macOS that I could use in a shell script. It’s true that there are several out there, but they all had limitations. These range from randomly limiting text fields to 254 characters (a limitation not found in the id3v2 spec), not being able to write comment tags (which is necessary for my project) and not being able to write id3v2 at all. I also came across a promising looking open source tool, written primarily in c++: &lt;a href=&quot;https://squell.github.io/id3/&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;id3mtag&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The tool isn’t available in Homebrew and the author does not make a pre-built binary for macOS available. So I thought I’d try to compile it myself. Should be no big deal, I thought. I’m a &lt;code class=&quot;highlighter-rouge&quot;&gt;make&lt;/code&gt; noob, and I’ve never written a line of c++ in life. My confidence was not well founded. Here’s what happened.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;make -f makefile
+c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c main.cpp
+c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c sedit.cpp
+c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c varexp.cpp
+c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c fileexp.cpp
+c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c charconv.cpp
+c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c mass_tag.cpp
+c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c pattern.cpp
+c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c setid3.cpp
+c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c getid3.cpp
+cc -g -Os -pedantic -Wformat -Wno-parentheses -c id3v1.c
+c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c setid3v2.cpp
+c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c getid3v2.cpp
+cc -g -Os -pedantic -Wformat -Wno-parentheses -c id3v2.c
+cc -g -Os -pedantic -Wformat -Wno-parentheses -c fileops.c
+c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c char_ucs.cpp
+c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c char_utf8.cpp
+c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c setlyr3.cpp
+c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c getlyr3.cpp
+c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c lyrics3.cpp
+c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c setfname.cpp
+c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c setquery.cpp
+c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c dumptag.cpp
+c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses main.o sedit.o varexp.o fileexp.o charconv.o mass_tag.o pattern.o setid3.o getid3.o id3v1.o setid3v2.o getid3v2.o id3v2.o fileops.o char_ucs.o char_utf8.o setlyr3.o getlyr3.o lyrics3.o setfname.o setquery.o dumptag.o  -o id3
+Undefined symbols for architecture x86_64:
+  &quot;_iconv&quot;, referenced from:
+      charset::recode(char*, unsigned long, void const*, unsigned long, char const*, char const*, bool, unsigned long) in charconv.o
+  &quot;_iconv_close&quot;, referenced from:
+      charset::recode(char*, unsigned long, void const*, unsigned long, char const*, char const*, bool, unsigned long) in charconv.o
+  &quot;_iconv_open&quot;, referenced from:
+      charset::recode(char*, unsigned long, void const*, unsigned long, char const*, char const*, bool, unsigned long) in charconv.o
+ld: symbol(s) not found for architecture x86_64
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+make: *** [id3] Error 1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Argh!&lt;/p&gt;
+
+&lt;p&gt;Knowing that macOS is based on FreeBSD I attempted to use the &lt;a href=&quot;https://github.com/squell/id3/blob/master/FreeBSD/Makefile&quot;&gt;FreeBSD Makefile&lt;/a&gt; included with the source code. It failed in a completely different way. However, studying the file I noticed these lines:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;USES=   iconv
+
+CFLAGS+=  -I${ICONV_INCLUDE_PATH}
+LDFLAGS+= -L${ICONV_PREFIX}/lib ${ICONV_LIB}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;I’m not going to lie and pretend I understand the problem. It seems to be based around Apple providing their own &lt;code class=&quot;highlighter-rouge&quot;&gt;iconv&lt;/code&gt; in &lt;code class=&quot;highlighter-rouge&quot;&gt;/usr/lib&lt;/code&gt; (there are three possible culprits on my system, &lt;code class=&quot;highlighter-rouge&quot;&gt;libiconv.2.4.0.dylib&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;libiconv.2.dylib&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;libiconv.dylib&lt;/code&gt;).&lt;/p&gt;
+
+&lt;p&gt;This document was also useful in helping me figure out what the values for the &lt;code class=&quot;highlighter-rouge&quot;&gt;ICONV_*&lt;/code&gt; variables should be: &lt;a href=&quot;https://www.freebsd.org/doc/en/books/porters-handbook/using-iconv.html&quot;&gt;https://www.freebsd.org/doc/en/books/porters-handbook/using-iconv.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;the-solution&quot;&gt;The solution:&lt;/h2&gt;
+
+&lt;p&gt;Install iconv (I used brew):&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;brew install iconv
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;iconv --version
+iconv (GNU libiconv 1.11)
+Copyright (C) 2000-2006 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+Written by Bruno Haible.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;which iconv
+/usr/bin/iconv
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Modify the generic &lt;a href=&quot;https://github.com/squell/id3/blob/master/makefile&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;makefile&lt;/code&gt;&lt;/a&gt; provided by the author. (I added a single line below each &lt;code class=&quot;highlighter-rouge&quot;&gt;# added&lt;/code&gt; comment)&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# added
+USES= iconv
+
+CFLAGS   ?= -g -Os -pedantic
+CFLAGS   += $(WARNINGS:%=-W%)
+
+# added
+CFLAGS+=        -I/usr/bin
+
+CXXFLAGS ?= $(DEFFLAGS)
+CXXFLAGS += -fno-rtti $(WARNINGS:%=-W%)
+LDFLAGS  ?=
+
+# added
+LDFLAGS  += -L/usr/bin -liconv
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now try to compile:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;make -f makefile
+c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c main.cpp
+c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c sedit.cpp
+c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c varexp.cpp
+c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c fileexp.cpp
+c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c charconv.cpp
+c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c mass_tag.cpp
+c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c pattern.cpp
+c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c setid3.cpp
+c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c getid3.cpp
+cc -g -Os -pedantic -Wformat -Wno-parentheses -I/usr/bin -c id3v1.c
+c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c setid3v2.cpp
+c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c getid3v2.cpp
+cc -g -Os -pedantic -Wformat -Wno-parentheses -I/usr/bin -c id3v2.c
+cc -g -Os -pedantic -Wformat -Wno-parentheses -I/usr/bin -c fileops.c
+c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c char_ucs.cpp
+c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c char_utf8.cpp
+c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c setlyr3.cpp
+c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c getlyr3.cpp
+c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c lyrics3.cpp
+c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c setfname.cpp
+c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c setquery.cpp
+c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c dumptag.cpp
+c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses main.o sedit.o varexp.o fileexp.o charconv.o mass_tag.o pattern.o setid3.o getid3.o id3v1.o setid3v2.o getid3v2.o id3v2.o fileops.o char_ucs.o char_utf8.o setlyr3.o getlyr3.o lyrics3.o setfname.o setquery.o dumptag.o  -L/usr/bin -liconv  -o id3
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Looks good! Now to install:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sudo make install
+install -d /usr/local/bin /usr/local/man/man1
+install -m 644 id3.man /usr/local/man/man1/id3.1
+install id3 /usr/local/bin/id3
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Success!&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;id3 --version
+id3 0.80 (2016005), Copyright (C) 2003, 04, 05, 06, 15 Marc R. Schoolderman
+This program comes with ABSOLUTELY NO WARRANTY.
+
+This is free software, and you are welcome to redistribute it
+under certain conditions; see the file named COPYING in the
+source distribution for details.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;After trying multiple different tagging tools (I’m particularly looking at you, &lt;code class=&quot;highlighter-rouge&quot;&gt;ffmpeg&lt;/code&gt;), &lt;code class=&quot;highlighter-rouge&quot;&gt;id3mtag&lt;/code&gt; works wonderfully. I suspect there’s a better solution to this problem, and perhaps one day I will find out what it is - but for now, I’m satisfied.&lt;/p&gt;
+
+&lt;h2 id=&quot;links&quot;&gt;Links:&lt;/h2&gt;
+&lt;p&gt;id3mtag: &lt;a href=&quot;https://squell.github.io/id3/&quot;&gt;https://squell.github.io/id3/&lt;/a&gt;&lt;/p&gt;</content><author><name></name></author><summary type="html">I’m working on a project which involves tagging some mp3 files using the id3v2 spec. Rather than write one myself, I thought (errantly) that it would be easy to find a command line tool for macOS that I could use in a shell script. It’s true that there are several out there, but they all had limitations. These range from randomly limiting text fields to 254 characters (a limitation not found in the id3v2 spec), not being able to write comment tags (which is necessary for my project) and not being able to write id3v2 at all. I also came across a promising looking open source tool, written primarily in c++: id3mtag.</summary></entry></feed>
