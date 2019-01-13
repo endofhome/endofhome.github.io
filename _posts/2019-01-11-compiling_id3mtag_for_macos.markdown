@@ -10,7 +10,7 @@ I'm working on a project which involves tagging some mp3 files using the id3v2 s
 The tool isn't available in Homebrew and the author does not make a pre-built binary for macOS available. So I thought I'd try to compile it myself. Should be no big deal, I thought. I'm a `make` noob, and I've never written a line of c++ in life. My confidence was not well founded. Here's what happened.
 
 ```
-make -f makefile
+$ make -f makefile
 c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c main.cpp
 c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c sedit.cpp
 c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c varexp.cpp
@@ -67,11 +67,11 @@ The solution:
 Install iconv (I used brew):
 
 ```
-brew install iconv
+$ brew install iconv
 ```
 
 ```
-iconv --version
+$ iconv --version
 iconv (GNU libiconv 1.11)
 Copyright (C) 2000-2006 Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
@@ -80,7 +80,7 @@ Written by Bruno Haible.
 ```
 
 ```
-which iconv
+$ which iconv
 /usr/bin/iconv
 ```
 
@@ -107,7 +107,7 @@ LDFLAGS  += -L/usr/bin -liconv
 Now try to compile:
 
 ```
-make -f makefile
+$ make -f makefile
 c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c main.cpp
 c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c sedit.cpp
 c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c varexp.cpp
@@ -136,7 +136,7 @@ c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses main.o sedi
 Looks good! Now to install:
 
 ```
-sudo make install
+$ sudo make install
 install -d /usr/local/bin /usr/local/man/man1
 install -m 644 id3.man /usr/local/man/man1/id3.1
 install id3 /usr/local/bin/id3
@@ -145,7 +145,7 @@ install id3 /usr/local/bin/id3
 Success!
 
 ```
-id3 --version
+$ id3 --version
 id3 0.80 (2016005), Copyright (C) 2003, 04, 05, 06, 15 Marc R. Schoolderman
 This program comes with ABSOLUTELY NO WARRANTY.
 

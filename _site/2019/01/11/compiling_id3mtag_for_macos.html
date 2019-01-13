@@ -49,7 +49,7 @@
 
 <p>The tool isn’t available in Homebrew and the author does not make a pre-built binary for macOS available. So I thought I’d try to compile it myself. Should be no big deal, I thought. I’m a <code class="highlighter-rouge">make</code> noob, and I’ve never written a line of c++ in life. My confidence was not well founded. Here’s what happened.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make -f makefile
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ make -f makefile
 c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c main.cpp
 c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c sedit.cpp
 c++ -g -Os -pedantic  -fno-rtti -Wformat -Wno-parentheses -c varexp.cpp
@@ -103,10 +103,10 @@ LDFLAGS+= -L${ICONV_PREFIX}/lib ${ICONV_LIB}
 
 <p>Install iconv (I used brew):</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew install iconv
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ brew install iconv
 </code></pre></div></div>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>iconv --version
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ iconv --version
 iconv (GNU libiconv 1.11)
 Copyright (C) 2000-2006 Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
@@ -114,7 +114,7 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 Written by Bruno Haible.
 </code></pre></div></div>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>which iconv
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ which iconv
 /usr/bin/iconv
 </code></pre></div></div>
 
@@ -139,7 +139,7 @@ LDFLAGS  += -L/usr/bin -liconv
 
 <p>Now try to compile:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make -f makefile
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ make -f makefile
 c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c main.cpp
 c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c sedit.cpp
 c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses -c varexp.cpp
@@ -167,7 +167,7 @@ c++ -g -Os -pedantic  -I/usr/bin -fno-rtti -Wformat -Wno-parentheses main.o sedi
 
 <p>Looks good! Now to install:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo make install
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo make install
 install -d /usr/local/bin /usr/local/man/man1
 install -m 644 id3.man /usr/local/man/man1/id3.1
 install id3 /usr/local/bin/id3
@@ -175,7 +175,7 @@ install id3 /usr/local/bin/id3
 
 <p>Success!</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>id3 --version
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ id3 --version
 id3 0.80 (2016005), Copyright (C) 2003, 04, 05, 06, 15 Marc R. Schoolderman
 This program comes with ABSOLUTELY NO WARRANTY.
 
