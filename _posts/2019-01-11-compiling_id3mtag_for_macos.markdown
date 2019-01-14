@@ -67,7 +67,7 @@ The solution:
 Install iconv (I used brew):
 
 ```
-$ brew install iconv
+$ brew install libiconv
 ```
 
 ```
