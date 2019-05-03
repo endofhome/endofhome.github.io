@@ -69,4 +69,5 @@ I'm not sure where this pattern originated (I think I was first shown it by [Dmi
 Links:
 ------
 Test doubles explained by Martin Fowler: [Mocks Aren't Stubs ](https://www.martinfowler.com/articles/mocksArentStubs.html)
+
 Test double definitions by Gerard Meszaros: [Mocks, Fakes, Stubs and Dummies](http://xunitpatterns.com/Mocks,%20Fakes,%20Stubs%20and%20Dummies.html)
