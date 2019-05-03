@@ -48,7 +48,7 @@ open class DummyFileStorage : FileStorage {
 }
 ```
 
-we can now extend the dummy, and only stub the method we care about:
+we can now extend the dummy, and only stub the function we care about:
 
 ```kotlin
 class StubFileStorage(fileNames: List<FileName>) : DummyFileStorage() {
@@ -58,7 +58,7 @@ class StubFileStorage(fileNames: List<FileName>) : DummyFileStorage() {
 
 If the usage is isolated to one particular area of our code, and we don't need any constructor parameters for our stub, we can even inline it as an anonymous object and assign it to a variable:
 ```kotlin
-val stubFileStorage = object : DummyFileStorage() {
+val stubFileStorage = object: DummyFileStorage() {
     override fun downloadFile(name: FileName) = File()
 }
 ```

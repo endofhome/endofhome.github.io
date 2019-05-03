@@ -84,7 +84,7 @@ If we replace our dummy object with an <em>open class</em></p>
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>we can now extend the dummy, and only stub the method we care about:</p>
+<p>we can now extend the dummy, and only stub the function we care about:</p>
 
 <div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">StubFileStorage</span><span class="p">(</span><span class="nv">fileNames</span><span class="p">:</span> <span class="nc">List</span><span class="p">&lt;</span><span class="nc">FileName</span><span class="p">&gt;)</span> <span class="p">:</span> <span class="nc">DummyFileStorage</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">override</span> <span class="k">fun</span> <span class="nf">listFiles</span><span class="p">()</span> <span class="p">=</span> <span class="n">fileNames</span>
@@ -92,7 +92,7 @@ If we replace our dummy object with an <em>open class</em></p>
 </code></pre></div></div>
 
 <p>If the usage is isolated to one particular area of our code, and we don’t need any constructor parameters for our stub, we can even inline it as an anonymous object and assign it to a variable:</p>
-<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">val</span> <span class="py">stubFileStorage</span> <span class="p">=</span> <span class="kd">object</span> <span class="err">: </span><span class="nc">DummyFileStorage</span><span class="p">()</span> <span class="p">{</span>
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">val</span> <span class="py">stubFileStorage</span> <span class="p">=</span> <span class="nv">object</span><span class="p">:</span> <span class="nc">DummyFileStorage</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">override</span> <span class="k">fun</span> <span class="nf">downloadFile</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="nc">FileName</span><span class="p">)</span> <span class="p">=</span> <span class="n">File</span><span class="p">()</span>
 <span class="p">}</span>
 </code></pre></div></div>
