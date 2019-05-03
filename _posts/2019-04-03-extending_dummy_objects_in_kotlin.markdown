@@ -5,7 +5,7 @@ date:   2019-04-03 11:12:01 +0000
 #categories: kotlin software testing TDD test doubles
 ---
 
-Often when testing software we want to construct an object which is dependent on other objects or functions, but we know that this code dependency is not a concern of our test. In these situations it is nice to use the simplest possible test double, classified by Martin Fowler as a [_dummy_](https://www.martinfowler.com/articles/mocksArentStubs.html). If this double is an object with member functions (also known as methods), none of these functions will be implemented. It might look something like this:
+Often when testing software we want to construct an object which is dependent on other objects or functions, but we know that this code dependency is not a concern of our test. In these situations it is nice to use the simplest possible test double, classified by Gerard Meszaros as a [_dummy_](https://www.martinfowler.com/articles/mocksArentStubs.html). If this double is an object with member functions (also known as methods), none of these functions will be implemented. It might look something like this:
 
 For a given interface of `FileStorage`
 ```kotlin
@@ -68,4 +68,5 @@ I'm not sure where this pattern originated (I think I was first shown it by [Dmi
 
 Links:
 ------
-Test double definitions: [Mocks Aren't Stubs ](https://www.martinfowler.com/articles/mocksArentStubs.html)
+Test doubles explained by Martin Fowler: [Mocks Aren't Stubs ](https://www.martinfowler.com/articles/mocksArentStubs.html)
+Test double definitions by Gerard Meszaros: [Mocks, Fakes, Stubs and Dummies](http://xunitpatterns.com/Mocks,%20Fakes,%20Stubs%20and%20Dummies.html)
