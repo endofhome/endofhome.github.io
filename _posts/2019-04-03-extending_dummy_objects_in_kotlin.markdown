@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Extending dummy classes in Kotlin"
+title:  "Extending dummy objects in Kotlin"
 date:   2019-04-03 11:12:01 +0000
 #categories: kotlin software testing TDD test doubles
 ---
