@@ -5,7 +5,7 @@ date:   2019-04-03 11:12:01 +0000
 #categories: kotlin software testing TDD test doubles
 ---
 
-Often when testing software we want to construct an object which is dependent on other objects or functions, but we know that this code dependency is not a concern of our test. In these situations it is nice to use the simplest possible test double, classified by Martin Fowler as a [_dummy_](https://www.martinfowler.com/articles/mocksArentStubs.html). If this double is a class with member functions (also known as methods), none of these functions will have any behaviour. It might look something like this:
+Often when testing software we want to construct an object which is dependent on other objects or functions, but we know that this code dependency is not a concern of our test. In these situations it is nice to use the simplest possible test double, classified by Martin Fowler as a [_dummy_](https://www.martinfowler.com/articles/mocksArentStubs.html). If this double is an object with member functions (also known as methods), none of these functions will have any behaviour. It might look something like this:
 
 For a given interface of `FileStorage`
 ```kotlin
@@ -37,7 +37,7 @@ class StubFileStorage(fileNames: List<FileName>) : FileStorage {
 }
 ```
 
-Kotlin provides us with a nice way to extend such dummy classes.
+Kotlin provides us with a nice way to extend the dummy object and remove the noise.
 If we replace our dummy object with an _open class_
 
 ```kotlin
