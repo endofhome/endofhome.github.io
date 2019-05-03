@@ -91,6 +91,12 @@ If we replace our dummy object with an <em>open class</em></p>
 <span class="p">}</span>
 </code></pre></div></div>
 
+<p>If the usage is isolated to one particular area of our code, and we don’t need any constructor parameters for our stub, we can even inline it as an anonymous object and assign it to a variable:</p>
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">val</span> <span class="py">stubFileStorage</span> <span class="p">=</span> <span class="kd">object</span> <span class="err">: </span><span class="nc">DummyFileStorage</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">override</span> <span class="k">fun</span> <span class="nf">downloadFile</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="nc">FileName</span><span class="p">):</span> <span class="nc">File</span> <span class="p">=</span> <span class="n">File</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
 <p>I’m not sure where this pattern originated (I think I was first shown it by <a href="https://twitter.com/dmitrykandalov">Dmitry Kandalov</a> or <a href="https://github.com/PriyoAujla">Pryio Aujla</a>) but I don’t see it in use much and I think it’s quite useful.</p>
 
 <h2 id="links">Links:</h2>

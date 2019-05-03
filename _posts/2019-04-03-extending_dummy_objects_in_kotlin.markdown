@@ -56,6 +56,13 @@ class StubFileStorage(fileNames: List<FileName>) : DummyFileStorage() {
 }
 ```
 
+If the usage is isolated to one particular area of our code, and we don't need any constructor parameters for our stub, we can even inline it as an anonymous object and assign it to a variable:
+```kotlin
+val stubFileStorage = object : DummyFileStorage() {
+    override fun downloadFile(name: FileName): File = File()
+}
+```
+
 I'm not sure where this pattern originated (I think I was first shown it by [Dmitry Kandalov](https://twitter.com/dmitrykandalov) or [Pryio Aujla](https://github.com/PriyoAujla)) but I don't see it in use much and I think it's quite useful.
 
 
