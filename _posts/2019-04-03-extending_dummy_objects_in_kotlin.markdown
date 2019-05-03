@@ -63,7 +63,7 @@ val stubFileStorage = object : DummyFileStorage() {
 }
 ```
 
-I'm not sure where this pattern originated (I think I was first shown it by [Dmitry Kandalov](https://twitter.com/dmitrykandalov) or [Pryio Aujla](https://github.com/PriyoAujla)) but I don't see it in use much and I think it's quite useful.
+I'm not sure where this pattern originated (I think I was first shown it by [Dmitry Kandalov](https://twitter.com/dmitrykandalov) or [Priyo Aujla](https://github.com/PriyoAujla)) but I don't see it in use much and I think it's quite useful.
 
 
 Links:
