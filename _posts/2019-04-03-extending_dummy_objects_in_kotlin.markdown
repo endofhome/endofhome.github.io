@@ -20,7 +20,7 @@ a basic dummy might be
 
 ```kotlin
 object DummyFileStorage : FileStorage {
-    override fun listFiles(): List<FileName> = TODO("not implemented")
+    override fun listFiles() = TODO("not implemented")
     override fun downloadFile(name: FileName) = TODO("not implemented")
     override fun storeFile(file: File) = TODO("not implemented")
 }
@@ -31,7 +31,7 @@ If we are testing a collaborator of `FileStorage` who calls the `listFiles` func
 
 ```kotlin
 class StubFileStorage(fileNames: List<FileName>) : FileStorage {
-    override fun listFiles(): List<FileName> = fileNames
+    override fun listFiles() = fileNames
     override fun downloadFile(name: FileName) = TODO("not implemented")
     override fun storeFile(file: File) = TODO("not implemented")
 }
@@ -42,7 +42,7 @@ If we replace our dummy object with an _open class_
 
 ```kotlin
 open class DummyFileStorage : FileStorage {
-    override fun listFiles(): List<FileName> = TODO("not implemented")
+    override fun listFiles() = TODO("not implemented")
     override fun downloadFile(name: FileName) = TODO("not implemented")
     override fun storeFile(file: File) = TODO("not implemented")
 }
