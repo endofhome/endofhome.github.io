@@ -5,7 +5,7 @@ date:   2019-04-03 11:12:01 +0000
 #categories: kotlin software testing TDD test doubles
 ---
 
-Often when testing software we want to construct an object which is dependent on other objects or functions, but we know that this code dependency is not a concern of our test. In these situations it is nice to use the simplest possible test double, classified by Martin Fowler as a [_dummy_](https://www.martinfowler.com/articles/mocksArentStubs.html). If this double is an object with member functions (also known as methods), none of these functions will have any behaviour. It might look something like this:
+Often when testing software we want to construct an object which is dependent on other objects or functions, but we know that this code dependency is not a concern of our test. In these situations it is nice to use the simplest possible test double, classified by Martin Fowler as a [_dummy_](https://www.martinfowler.com/articles/mocksArentStubs.html). If this double is an object with member functions (also known as methods), none of these functions will be implemented. It might look something like this:
 
 For a given interface of `FileStorage`
 ```kotlin
@@ -26,7 +26,7 @@ object DummyFileStorage : FileStorage {
 }
 ```
 
-In other test situations we might want other types of test double. These could be stubs, spies, fakes or mocks, depending on the style of testing we deem appropriate. It is quite common that we might need for example, a stub, but our test is only concerned with one member function. We can duplicate the dummy and give only this function the behaviour we desire, but this can lead to a lot of code duplication, especially if we have complicated objects (not that complicated objects are desirable, but I'm sure we've all been in this situation).
+In other test situations we might want other types of test double. These could be stubs, spies, fakes or mocks, depending on the style of testing we deem appropriate. It is quite common that we might need for example, a stub, but our test is only concerned with one member function. We can duplicate the dummy and give only this function the implementation we desire, but this can lead to a lot of code duplication, especially if we have complicated objects (not that complicated objects are desirable, but I'm sure we've all been in this situation).
 If we are testing a collaborator of `FileStorage` who calls the `listFiles` function, a basic stub for our `FileStorage` interface might look like this:
 
 ```kotlin
