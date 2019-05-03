@@ -12,7 +12,7 @@ For a given interface of `FileStorage`
 interface FileStorage {
     fun listFiles(): List<FileName>
     fun downloadFile(name: FileName): File
-    fun storeFile(file: File)
+    fun uploadFile(file: File)
 }
 ```
 
@@ -22,7 +22,7 @@ a basic dummy might be
 object DummyFileStorage : FileStorage {
     override fun listFiles() = TODO("not implemented")
     override fun downloadFile(name: FileName) = TODO("not implemented")
-    override fun storeFile(file: File) = TODO("not implemented")
+    override fun uploadFile(file: File) = TODO("not implemented")
 }
 ```
 
@@ -33,7 +33,7 @@ If we are testing a collaborator of `FileStorage` who calls the `listFiles` func
 class StubFileStorage(fileNames: List<FileName>) : FileStorage {
     override fun listFiles() = fileNames
     override fun downloadFile(name: FileName) = TODO("not implemented")
-    override fun storeFile(file: File) = TODO("not implemented")
+    override fun uploadFile(file: File) = TODO("not implemented")
 }
 ```
 
@@ -44,7 +44,7 @@ If we replace our dummy object with an _open class_
 open class DummyFileStorage : FileStorage {
     override fun listFiles() = TODO("not implemented")
     override fun downloadFile(name: FileName) = TODO("not implemented")
-    override fun storeFile(file: File) = TODO("not implemented")
+    override fun uploadFile(file: File) = TODO("not implemented")
 }
 ```
 
