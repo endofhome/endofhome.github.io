@@ -87,7 +87,7 @@ If we replace our dummy object with an <em>open class</em></p>
 <p>we can now extend the dummy, and only stub the method we care about:</p>
 
 <div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">StubFileStorage</span><span class="p">(</span><span class="nv">fileNames</span><span class="p">:</span> <span class="nc">List</span><span class="p">&lt;</span><span class="nc">FileName</span><span class="p">&gt;)</span> <span class="p">:</span> <span class="nc">DummyFileStorage</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">override</span> <span class="k">fun</span> <span class="nf">listFiles</span><span class="p">():</span> <span class="nc">List</span><span class="p">&lt;</span><span class="nc">FileName</span><span class="p">&gt;</span> <span class="p">=</span> <span class="n">fileNames</span>
+    <span class="k">override</span> <span class="k">fun</span> <span class="nf">listFiles</span><span class="p">()</span> <span class="p">=</span> <span class="n">fileNames</span>
 <span class="p">}</span>
 </code></pre></div></div>
 

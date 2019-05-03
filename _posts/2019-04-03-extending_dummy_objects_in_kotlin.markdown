@@ -52,7 +52,7 @@ we can now extend the dummy, and only stub the method we care about:
 
 ```kotlin
 class StubFileStorage(fileNames: List<FileName>) : DummyFileStorage() {
-    override fun listFiles(): List<FileName> = fileNames
+    override fun listFiles() = fileNames
 }
 ```
 
