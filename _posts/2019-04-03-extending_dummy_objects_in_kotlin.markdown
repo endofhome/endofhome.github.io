@@ -16,7 +16,7 @@ interface FileStorage {
 }
 ```
 
-a basic dummy might look like this
+a basic dummy might be
 
 ```kotlin
 object DummyFileStorage : FileStorage {
